@@ -1,5 +1,8 @@
 # UCBCapstone
 
+## Jupyter notebook for this study:
+    https://github.com/mingl2000/UCBCapstone/blob/main/data_explore3.ipynb
+
 ## Data source:
     CSI 300 index future data from http://www.cffex.com.cn  where daily dump of top 20 dealers by volume, etc.
     Yahoo data for CSI 300 index daily history
@@ -29,4 +32,6 @@
     - GridSearchCV model got the smallest MSE, even though this MSE is only 10% smaller than the max MSE of all the models tried.
     - All the MSE is very small than expected. More study is needed.
         - The likely cause for small MSE is : The target is the change for the next day which is small, usually around -0.01 to 0.01 and fairely close with each other most of the time.
-            
+    - Juding by the correlation between net long/short contract volume on a day and the next day's CSI 300 daily return, some of the dealers out of the 50 largest dealers seem to have to higher absolute correlation which indicates that these dealer's future trading data may be ussed to improve the timming of trades.
+       - Some of the dealers' net future contract trade volume is negatively correlated to the CSI 300 daily return next day. This indicates that future contact may be used to reduce trading risk on stocks instead of profiting for future contract trades.   
+
