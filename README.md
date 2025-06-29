@@ -63,15 +63,14 @@
           product  | predicted_IC   | Index ETF |   Index name
             IF     | -0.238435      | 000300.SS |   CSI 300 index
             IH     |  0.134242      | 510050.SS |   CSI 50 index
-            IC     |  0.024866      | 510500.SS |   CSI 50 index
+            IC     |  0.024866      | 510500.SS |   CSI 500 index
             IM     | -0.257277      | 512100.SS |   CSI 1000 index
         - Based on this analysis:
             - CSI future index IF and IM may have more prediciton power for the crossponding index ETF change percent next day
                 - Future study will focus on this with the hope of best trading return
             - CSI future index IC may NOT have more prediciton power for the crossponding index ETF change percent next day
             - CSI future index IC may have fairely good prediciton power for the crossponding index ETF change percent next day
-            -            
-
+            
 
 ## Study conclusion
     - GridSearchCV model got the smallest MSE, even though this MSE is only 10% smaller than the max MSE of all the models tried and IC from prediction does not improve. 
@@ -83,7 +82,7 @@
             - Some of the dealers' net future contract trade volume is negatively correlated to the CSI 300 daily return next day. This indicates that future contact may be used to reduce trading risk on stocks instead of profiting for future contract trades.   
     - The Information Coefficient (IC) from the predicted value of VotingRegressor is high for index future product IF and IM
             - This may be used to improve the trading performance for trade related index ETF  000300.SS and 512100.SS
-            
+
 
 ### Future study:
     - Add more models, such as deep neural network, etc.
