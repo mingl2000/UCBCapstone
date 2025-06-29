@@ -71,7 +71,7 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 
 * **IF index**:
 
-  * IC = **-0.230**, which is significantly better than raw ICs from futures data
+  * IC = **-0.238**, which is significantly better than raw ICs from futures data
   * Grid-searched model achieves similar IC
 
 * **Across 4 Futures Products**:
@@ -79,15 +79,18 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 | Product | Predicted IC | Index ETF | Index Name     |
 | ------- | ------------ | --------- | -------------- |
 | IF      | -0.238       | 000300.SS | CSI 300 Index  |
-| IH      | 0.134        | 510050.SS | CSI 50 Index   |
-| IC      | 0.025        | 510500.SS | CSI 500 Index  |
+| IH      |  0.134       | 510050.SS | CSI 50 Index   |
+| IC      |  0.025       | 510500.SS | CSI 500 Index  |
 | IM      | -0.257       | 512100.SS | CSI 1000 Index |
 
 * **Insights**:
 
   * **IF** and **IM** futures show strong predictive power for their corresponding ETF returns.
+    - Since Information Coefficient (IC) is **negative**, when prediction is **positive**, **negative** return next day is expected. 
   * **IC** appears to have limited predictive power.
-  * **IH** shows moderate predictive potential.
+  * **IH** shows moderate predictive potential
+    - Since Information Coefficient (IC) is **positive**, when prediction is **positive**, **positive** return next day is expected. 
+
 
 ## Study Conclusions
 
@@ -96,7 +99,7 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 * While large dealers show modest correlation with CSI returns, some smaller dealers (with intermittent data) showed higher correlations.
 
   * This suggests futures contracts may often be used for **hedging** rather than speculation.
-* The **VotingRegressor** model yielded a high IC for **IF** and **IM** futures:
+* The **VotingRegressor** model yielded a high absoute value of IC for **IF** and **IM** futures:
 
   * This could be leveraged to enhance ETF trading performance (e.g., 000300.SS and 512100.SS).
 
@@ -112,6 +115,4 @@ We analyzed the **Information Coefficient** between futures contract trading dat
   * Identify top `n` individual stocks where futures data correlates highly with stock return the next day
   * Investigate whether this selective strategy outperforms direct index-based trading
 
----
 
-Let me know if you'd like a presentation slide version or additional visuals/plots for this project summary.
