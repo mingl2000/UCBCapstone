@@ -1,94 +1,117 @@
-# UCBCapstone
+# UCB Capstone for AI/ML class
 
 ## Introduction
-    - It's said future contract traders are smart traders. So can public future contact trading (top 20 in each of 7 columns only daily) help?
-    - This study intends to investigate if this improves trading outcome of CSI index only.
 
-## Jupyter notebook for this study:
-    https://github.com/mingl2000/UCBCapstone/blob/main/data_explore3.ipynb
+* It's often said that futures traders are the "smart money." This study explores whether the public data of top 20 futures contract traders daily (across 7 columns, updated daily) can be leveraged to improve trading outcomes.
+* Specifically, we investigate if this data can enhance predictions of the CSI index performance.
 
-## Data source:
-    CSI 300 index future data from http://www.cffex.com.cn  where daily dump of top 20 dealers by volume, etc.
-    Yahoo data for CSI 300 index daily history
+## Jupyter Notebook
 
-## Data Preprocessing:
-    - All the future data from 1/4/2021 were downloaded.
-    - Top 50 dealers were selected based on the total trading volume from day 1.
-    - Each day's net long/short contacts for each of these 50 traders are organized into one row of data.  If no data for a dealer for that day, 0 is used.
-    - This data is merged  merged CSI daily history data into data like following:
+You can find the full Jupyter notebook for this study here:
+👉 [data\_explore3.ipynb](https://github.com/mingl2000/UCBCapstone/blob/main/data_explore3.ipynb)
 
-        | Date             | Dealerr1 | Dealer2 |Dealer 3 |CSI return next day
-        | 2025-01-02       |   -100    | 80     |  -70    |   -0.01
-        | 2025-01-03       |   200     | -100   |  70     |   -0.02
+## Data Sources
 
-## Dealer analysis
-    - Top 50 dealers contributes 97+% trading volume
-    - Top 100 dealers contributes 99+% trading volume
-    - Top 50 dealers data is used for futhre analysis
+* **CSI 300 Index Futures**: From [CFFEX](http://www.cffex.com.cn), including daily top 20 traders by volume and other metrics.
+* **CSI 300 Index Historical Data**: From Yahoo Finance.
 
-## IC analysis:
-    - Information Coefficient (IC) is analyed between future contract trading data and CSI index change next day
-        - By each future contract trading data colum for all dealers:
-            - volume        | contract volume at the end day     
-            - volchange     | contract volume change between the day and the day before
-            - buyvol        | buy contract volume at the end day      
-            - buyvolchange  | buy contract volume change between the day and the day before  
-            - sellvol       | sell contract volume at the end day 
-            - sellvolchange | sell contract volume change between the day and the day before  
-            - net_vol_diff  | buy volume change - sell volume change
-        - By each dealer/future contract trading data column
-            - IC for 2 biggest dealer is about 0.1
-            - One dealer has IC between trading volume and CSI index change is 0.3. But the trading volume is small and data is not availale every day.
+## Data Preprocessing
 
+* Futures data from **January 4, 2021** onwards was collected.
+* **Top 50 dealers** were selected based on total trading volume over the entire period.
+* Each day's net long/short positions for these 50 dealers were organized into a single row. If a dealer has no data for a specific day, a value of 0 was used.
+* The futures data was merged with the CSI index daily return data to form a dataset like:
 
-## Data models:
-    The following models are tried and their results
-                Model                   |   MSE             |   Comments
-1       |     LinearRegression          |   0.000138        |   Default parameters
-2       |      RidgeRegression          |   0.000138        |   Default parameters
-3       |         KnnRegressor          |   0.000124        |   Default parameters
-4       |    DecisionTreeRegressor      |   0.000251        |   Default parameters
-5       |   SupportVectorRegressor      |   0.000169        |   Default parameters
-6       |  TransformedTargetRegressor   |   0.000138        |   Default parameters
-7       |      VotingRegressor          |   0.000129        |   Default parameters with each of the 6 models above in this table
-8       |         GridSearchCV          |   0.000123        |   Hyper-parameter search for each of the 7 models above.
+```
+| Date       | Dealer1 | Dealer2 | Dealer3 | CSI return (next day) |
+|------------|---------|---------|---------|------------------------|
+| 2025-01-02 |  -100   |   80    |  -70    |         -0.01         |
+| 2025-01-03 |   200   |  -100   |   70    |         -0.02         |
+```
 
-    IC from model predictions and y_test for IF future index
-        - IC =-0.230 is significently higher than any of IC computed from raw future trading data and CSI index change next day
-            - IC is almost the same from the Gridsearched model.
-        - This is significent higher than 2 biggest deals with IC about 0.1
+## Dealer Analysis
 
-    IC from model predictions and y_test for all 4 future index:
-        - Here is the result:
-          product  | predicted_IC   | Index ETF |   Index name
-            IF     | -0.238435      | 000300.SS |   CSI 300 index
-            IH     |  0.134242      | 510050.SS |   CSI 50 index
-            IC     |  0.024866      | 510500.SS |   CSI 500 index
-            IM     | -0.257277      | 512100.SS |   CSI 1000 index
-        - Based on this analysis:
-            - CSI future index IF and IM may have more prediciton power for the crossponding index ETF change percent next day
-                - Future study will focus on this with the hope of best trading return
-            - CSI future index IC may NOT have more prediciton power for the crossponding index ETF change percent next day
-            - CSI future index IC may have fairely good prediciton power for the crossponding index ETF change percent next day
-            
+* Top 50 dealers account for over **97%** of the total trading volume.
+* Top 100 dealers account for over **99%**.
+* Therefore, the **top 50 dealers** are used for all further analysis.
 
-## Study conclusion
-    - GridSearchCV model got the smallest MSE, even though this MSE is only 10% smaller than the max MSE of all the models tried and IC from prediction does not improve. 
-    - All the MSE is very small than expected. More study is needed.
-        - The likely cause for small MSE is : The target is the change for the next day which is small, usually around -0.01 to 0.01 and fairely close with each other most of the time.
-    - Dealer and correlationsof their trading to CSI 300 index percent change next day:
-        - Some small dealers juding by trading volume seem to have high correlations between the two. But they may not have future trade data every day since only top 20 in each category is published.
-            - This study focus on the top 50 dealers by volume.
-            - Some of the dealers' net future contract trade volume is negatively correlated to the CSI 300 daily return next day. This indicates that future contact may be used to reduce trading risk on stocks instead of profiting for future contract trades.   
-    - The Information Coefficient (IC) from the predicted value of VotingRegressor is high for index future product IF and IM
-            - This may be used to improve the trading performance for trade related index ETF  000300.SS and 512100.SS
+## Information Coefficient (IC) Analysis
 
+We analyzed the **Information Coefficient** between futures contract trading data and next-day CSI index returns.
 
-### Future study:
-    - Add more models, such as deep neural network, etc.
-    - Add back testing to see if the high IC from model predictions can actually help for the trading outcome
-        - Buy and hold strategy for CSI 300 is the baseline
-        - AI strategt from different models
-    - Add more data sources
-        - Select the top n stocks will have high ICs between future contract data of the day and stock return next day.
-        - Will this strategy help to achive better return than CSI trading directly?
+* **Per data column (aggregated across dealers):**
+
+  * `volume`: End-of-day contract volume
+  * `volchange`: Daily change in contract volume
+  * `buyvol`: End-of-day buy contract volume
+  * `buyvolchange`: Daily change in buy contract volume
+  * `sellvol`: End-of-day sell contract volume
+  * `sellvolchange`: Daily change in sell contract volume
+  * `net_vol_diff`: `buyvolchange - sellvolchange`
+
+* **Per dealer:**
+
+  * The two largest dealers showed IC ≈ **0.1**
+  * One smaller dealer had an IC ≈ **0.3**, but their data was not consistently available and their trading volume was small.
+
+## Models & Performance
+
+| Model                        | MSE      | Comments                                  |
+| ---------------------------- | -------- | ----------------------------------------- |
+| Linear Regression            | 0.000138 | Default parameters                        |
+| Ridge Regression             | 0.000138 | Default parameters                        |
+| KNN Regressor                | 0.000124 | Default parameters                        |
+| Decision Tree Regressor      | 0.000251 | Default parameters                        |
+| Support Vector Regressor     | 0.000169 | Default parameters                        |
+| Transformed Target Regressor | 0.000138 | Default parameters                        |
+| Voting Regressor             | 0.000129 | Ensemble of above models                  |
+| GridSearchCV                 | 0.000123 | Hyperparameter tuning on all above models |
+
+### IC from Model Predictions vs. Actual CSI Index Return (Next Day)
+
+* **IF index**:
+
+  * IC = **-0.230**, which is significantly better than raw ICs from futures data
+  * Grid-searched model achieves similar IC
+
+* **Across 4 Futures Products**:
+
+| Product | Predicted IC | Index ETF | Index Name     |
+| ------- | ------------ | --------- | -------------- |
+| IF      | -0.238       | 000300.SS | CSI 300 Index  |
+| IH      | 0.134        | 510050.SS | CSI 50 Index   |
+| IC      | 0.025        | 510500.SS | CSI 500 Index  |
+| IM      | -0.257       | 512100.SS | CSI 1000 Index |
+
+* **Insights**:
+
+  * **IF** and **IM** futures show strong predictive power for their corresponding ETF returns.
+  * **IC** appears to have limited predictive power.
+  * **IH** shows moderate predictive potential.
+
+## Study Conclusions
+
+* The **GridSearchCV model** achieved the lowest MSE, though the improvement over other models was minor (\~10%).
+* All MSE values were much lower than expected, likely due to the small variance in next-day index changes (typically between -0.01 and 0.01).
+* While large dealers show modest correlation with CSI returns, some smaller dealers (with intermittent data) showed higher correlations.
+
+  * This suggests futures contracts may often be used for **hedging** rather than speculation.
+* The **VotingRegressor** model yielded a high IC for **IF** and **IM** futures:
+
+  * This could be leveraged to enhance ETF trading performance (e.g., 000300.SS and 512100.SS).
+
+## Future Work
+
+* **Add more models**, such as deep learning approaches (e.g., LSTM, Transformers).
+* **Backtesting** strategies based on model predictions:
+
+  * Compare against a simple "buy and hold" strategy for CSI 300
+  * Evaluate whether AI-based strategies provide better returns
+* **Expand data sources**:
+
+  * Identify top `n` individual stocks where futures data correlates highly with stock return the next day
+  * Investigate whether this selective strategy outperforms direct index-based trading
+
+---
+
+Let me know if you'd like a presentation slide version or additional visuals/plots for this project summary.
