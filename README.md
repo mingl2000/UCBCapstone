@@ -77,13 +77,12 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 
 * **Across 4 Futures Products**:
 
-| Product | Information Coefficient (IC)  | Information Coefficient (IC)  |     Index ETF   | Index Name      |  \
-|         | from  **VotingRegressor**     | from  **AdaBoostRegressor**   |                 |                 |  \
-|---------|-------------------------------|-------------------------------|-----------------|-----------------|  \
-| IF      |           -0.238              |           -0.116083           |     000300.SS   | CSI 300 Index   |  \
-| IH      |            0.134              |            0.103926           |     510050.SS   | CSI 50 Index    |  \
-| IC      |            0.025              |           -0.222088           |     510500.SS   | CSI 500 Index   |  \
-| IM      |           -0.257              |            0.102572           |     512100.SS   | CSI 1000 Index  |  \
+| Product | Information Coefficient (IC) from  **VotingRegressor**  | Information Coefficient (IC) from  **AdaBoostRegressor**    |     Index ETF   | Index Name      |  
+|---------|---------------------------------------------------------|-------------------------------------------------------------|-----------------|-----------------|
+| IF      |           -0.238                                        |           -0.116083                                         |     000300.SS   | CSI 300 Index   |  
+| IH      |            0.134                                        |            0.103926                                         |     510050.SS   | CSI 50 Index    |  
+| IC      |            0.025                                        |           -0.222088                                         |     510500.SS   | CSI 500 Index   |  
+| IM      |           -0.257                                        |            0.102572                                         |     512100.SS   | CSI 1000 Index  |  
 
 
 
