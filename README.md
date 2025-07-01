@@ -67,6 +67,7 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 | Voting Regressor             | 0.000129 | Ensemble of above models                  |
 | GridSearchCV                 | 0.000123 | Hyperparameter tuning on all above models |
 
+
 ### IC from Model Predictions vs. Actual CSI Index Return (Next Day)
 
 * **IF index**:
@@ -76,21 +77,27 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 
 * **Across 4 Futures Products**:
 
-| Product | Predicted IC | Index ETF | Index Name     |
-| ------- | ------------ | --------- | -------------- |
-| IF      | -0.238       | 000300.SS | CSI 300 Index  |
-| IH      |  0.134       | 510050.SS | CSI 50 Index   |
-| IC      |  0.025       | 510500.SS | CSI 500 Index  |
-| IM      | -0.257       | 512100.SS | CSI 1000 Index |
+| Product | Information Coefficient (IC)  | Information Coefficient (IC)  |     Index ETF   | Index Name      | 
+|         | from  **VotingRegressor**     | from  **AdaBoostRegressor**   |                 |                 |
+| IF      |           -0.238              |           -0.116083           |     000300.SS   | CSI 300 Index   |
+| IH      |            0.134              |            0.103926           |     510050.SS   | CSI 50 Index    |
+| IC      |            0.025              |           -0.222088           |     510500.SS   | CSI 500 Index   |
+| IM      |           -0.257              |            0.102572           |     512100.SS   | CSI 1000 Index  |
+
+
+
 
 * **Insights**:
 
   * **IF** and **IM** futures show strong predictive power for their corresponding ETF returns.
     - Since Information Coefficient (IC) is **negative**, when prediction is **positive**, **negative** return next day is expected. 
-  * **IC** appears to have limited predictive power.
+  * **IC** appears to have limited predictive power from VotingRegressor, but **AdaBoostRegressor** seems to provide good IC
   * **IH** shows moderate predictive potential
     - Since Information Coefficient (IC) is **positive**, when prediction is **positive**, **positive** return next day is expected. 
 
+
+### Try with AdaBoostRegressor for all CSI future index products
+    - Information Coefficient (IC) for product IC got -0.22 which is much more significent than the 0.02 from Regressor
 
 ## Study Conclusions
 
@@ -99,9 +106,12 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 * While large dealers show modest correlation with CSI returns, some smaller dealers (with intermittent data) showed higher correlations.
 
   * This suggests futures contracts may often be used for **hedging** rather than speculation.
-* The **VotingRegressor** model yielded a high absoute value of IC for **IF** and **IM** futures:
-
+* The **VotingRegressor** model yielded a high absoute value of Information Coefficient (IC) for **IF** and **IM** futures:
   * This could be leveraged to enhance ETF trading performance (e.g., 000300.SS and 512100.SS).
+
+* The **AdaBoostRegressor** model yielded a high absoute value of Information Coefficient (IC)  for **IC** future:
+  * This could be leveraged to enhance ETF trading performance (e.g., 510500.SS).
+*
 
 ## Future Work
 
