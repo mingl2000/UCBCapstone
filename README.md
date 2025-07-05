@@ -84,7 +84,24 @@ We analyzed the **Information Coefficient** between futures contract trading dat
 | IC      |            0.025                                        |           -0.222088                                         |     510500.SS   | CSI 500 Index   |  
 | IM      |           -0.257                                        |            0.102572                                         |     512100.SS   | CSI 1000 Index  |  
 
-
+| Product |       AI model      | Information Coefficient (IC)%| RMSE | Index ETF   | Index Nam   | 
+|---------|---------------------------------------------------------|-----------|-----------------|
+|   IF    |        Tensorflow   |       0.401426    |   1.239543    | 000300.SS | CSI 300 Index   | 
+|   IF    |           XgbBoost  |       5.392898    |   1.102974    | 000300.SS |  CSI 300 Index  | 
+|   IF    |    VotingRegressor  |      -2.628456    |   1.245353    | 000300.SS |  CSI 300 Index  | 
+|   IF    |  AdaBoostRegressor  |      -6.799853    |   1.137156    | 000300.SS |  CSI 300 Index  |
+|   IH    |         Tensorflow  |      -9.638394    |   1.415375    | 510050.SS | CSI 300 Index   | 
+|   IH    |          XgbBoost   |      -2.440734    |   1.235854    | 510050.SS |  CSI 50 Index   | 
+|   IH    |    VotingRegressor  |      -4.786681    |   1.321331    | 510050.SS |  CSI 50 Index   | 
+|   IH    |  AdaBoostRegressor  |      -0.596053    |   1.232800    | 510050.SS | CSI 50 Index    | 
+|   IC    |         Tensorflow  |       8.614573    |   1.352025    | 510500.SS | CSI 50 Index    | 
+|   IC    |           XgbBoost  |      21.007844    |   1.156693    | 510500.SS | CSI 500 Index   | 
+|   IC    |    VotingRegressor  |      28.317904    |   1.169722    | 510500.SS | CSI 500 Index   | 
+|   IC    |  AdaBoostRegressor  |      20.265594    |   1.165397    | 510500.SS | CSI 500 Index   | 
+|   IM    |         Tensorflow  |      -5.642971    |   2.442851    | 512100.SS | CSI 1000 Index  | 
+|   IM    |           XgbBoost  |      -2.729462    |   23.525207   | 512100.SS | CSI 1000 Index  |
+|   IM    |    VotingRegressor  |       3.824080    |   4.124704    | 512100.SS | CSI 1000 Index  |
+|   IM    |  AdaBoostRegressor  |      10.868526    |   1.712199    | 512100.SS | CSI 1000 Index  |
 
 
 * **Insights**:
