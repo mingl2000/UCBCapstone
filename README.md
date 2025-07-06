@@ -59,7 +59,12 @@ The **Information Coefficient** between futures contract trading data and next-d
 
 ### IC from Model Predictions vs. Actual CSI Index Return % (Next Day)
 
-* **Multiple models are tried**:
+* **Following models are tried and compared** and **LinearRegression** is used as **baseline model**.
+  - LinearRegression
+  - KnnRegressor
+  - DecisionTreeRegressor
+  - SupportVectorRegressor
+  - TransformedTargetRegressor
   - VotingRegressor using the following models:
     - LinearRegression
     - KnnRegressor
@@ -74,37 +79,16 @@ The **Information Coefficient** between futures contract trading data and next-d
   * IC = **-0.238**, which is significantly better than raw ICs from futures data
   * Grid-searched model achieves similar IC
 
-* **Across 4 Futures Products**:
+* **Test result**:
   Here is the test summary across multiple models and mutliple csi index future products.
     - For some index future products, such as IC, the Information Coefficient% seem to be higher acoss models. 
     - Please notem the **Information Coefficient% is 100 times of Information Coefficient**.
     - Generally speaking, the RMSE is fairely consistent between models and across products with exception XgbBoost for IM.
       - More turning for XgbBoost may be needed.
 
-```markdown
-| Product | AI Model           | Information Coefficient (IC)% | RMSE      | Index ETF  | Index Name     |
-|---------|--------------------|------------------------------|-----------|------------|-----------------|
-| IF      | Tensorflow         | 0.401426                     | 1.239543  | 000300.SS  | CSI 300 Index   |
-| IF      | XgbBoost           | 5.392898                     | 1.102974  | 000300.SS  | CSI 300 Index   |
-| IF      | VotingRegressor    | -2.628456                    | 1.245353  | 000300.SS  | CSI 300 Index   |
-| IF      | AdaBoostRegressor  | -6.799853                    | 1.137156  | 000300.SS  | CSI 300 Index   |
-| IH      | Tensorflow         | -9.638394                    | 1.415375  | 510050.SS  | CSI 300 Index   |
-| IH      | XgbBoost           | -2.440734                    | 1.235854  | 510050.SS  | CSI 50 Index    |
-| IH      | VotingRegressor    | -4.786681                    | 1.321331  | 510050.SS  | CSI 50 Index    |
-| IH      | AdaBoostRegressor  | -0.596053                    | 1.232800  | 510050.SS  | CSI 50 Index    |
-| IC      | Tensorflow         | 8.614573                     | 1.352025  | 510500.SS  | CSI 50 Index    |
-| IC      | XgbBoost           | 21.007844                    | 1.156693  | 510500.SS  | CSI 500 Index   |
-| IC      | VotingRegressor    | 28.317904                    | 1.169722  | 510500.SS  | CSI 500 Index   |
-| IC      | AdaBoostRegressor  | 20.265594                    | 1.165397  | 510500.SS  | CSI 500 Index   |
-| IM      | Tensorflow         | -5.642971                    | 2.442851  | 512100.SS  | CSI 1000 Index  |
-| IM      | XgbBoost           | -2.729462                    | 23.525207 | 512100.SS  | CSI 1000 Index  |
-| IM      | VotingRegressor    | 3.824080                     | 4.124704  | 512100.SS  | CSI 1000 Index  |
-| IM      | AdaBoostRegressor  | 10.868526                    | 1.712199  | 512100.SS  | CSI 1000 Index  |
-```
 
 
-
-| Product | Model                     | IC%        | RMSE     | Index ETF | Index Name      |
+| Product | Model                     | Information Coefficient%        | RMSE     | Index ETF | Index Name      |
 |---------|---------------------------|------------|----------|-----------|-----------------|
 | IH      | LinearRegression          | -6.956484  | 1.518327 | 510050.SS | CSI 50 Index    |
 | IH      | RidgeRegression           | -7.049813  | 1.510930 | 510050.SS | CSI 50 Index    |
@@ -151,12 +135,26 @@ The **Information Coefficient** between futures contract trading data and next-d
 
 
 * **Insights**:
+  * **LinearRegression** does not offer best RMSE in general across all products.
+    - But for some products, like **IC**, information coefficient from LinearRegression is very impressive to be 0.27 or 27% reported above.
 
-  * **IF** and **IM** futures show strong predictive power for their corresponding ETF returns.
-    - Since Information Coefficient (IC) is **negative**, when prediction is **positive**, **negative** return next day is expected. 
-  * **IC** appears to have limited predictive power from VotingRegressor, but **AdaBoostRegressor** seems to provide good IC
-  * **IH** shows moderate predictive potential
-    - Since Information Coefficient (IC) is **positive**, when prediction is **positive**, **positive** return next day is expected. 
+  * **Tensorflow** model:
+    - The mighty Tensorflow did not offer best RMSE nor information coefficient seems to be strange:
+      - The data may be linear by nature
+      - The Tensorflow model may be too complicated
+      - Different Tensorflow model may be needed where Keras turning may help.
+
+  * For index future product **IC**, the information coefficient is consistently high across most of models, except KnnRegressor and Tensorflow
+    - This indicates that there is a strong correlation between the CSI index change next day and this future product trading info.
+    - This product may offer best insight for CSI index trading. 
+    - The mighty Tensorflow did not offer best RMSE nor information coefficient seems to be strange:
+      - The data may be linear by nature
+      - The Tensorflow model may be too complicated
+      - Different Tensorflow model
+
+  * **IH**,**IF** and **IM** futures show less predictive power for their corresponding ETF returns.
+    - When Information Coefficient (IC) is **positive**, when prediction is **positive**, **positive** return next day is expected. 
+
 
 
 ### Try with AdaBoostRegressor for all CSI future index products
