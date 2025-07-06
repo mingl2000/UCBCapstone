@@ -37,7 +37,7 @@ You can find the full Jupyter notebook for this study here:
 
 ## Information Coefficient (IC) Analysis
 
-We analyzed the **Information Coefficient** between futures contract trading data and next-day CSI index returns.
+The **Information Coefficient** between futures contract trading data and next-day CSI index returns are analyzed in addition to RMSE.
 
 * **Per data column (aggregated across dealers):**
 
@@ -54,31 +54,32 @@ We analyzed the **Information Coefficient** between futures contract trading dat
   * The two largest dealers showed IC ≈ **0.1**
   * One smaller dealer had an IC ≈ **0.3**, but their data was not consistently available and their trading volume was small.
 
-## Models & Performance
-
-| Model                        | MSE      | Comments                                  |
-| ---------------------------- | -------- | ----------------------------------------- |
-| Linear Regression            | 0.000138 | Default parameters                        |
-| Ridge Regression             | 0.000138 | Default parameters                        |
-| KNN Regressor                | 0.000124 | Default parameters                        |
-| Decision Tree Regressor      | 0.000251 | Default parameters                        |
-| Support Vector Regressor     | 0.000169 | Default parameters                        |
-| Transformed Target Regressor | 0.000138 | Default parameters                        |
-| Voting Regressor             | 0.000129 | Ensemble of above models                  |
-| GridSearchCV                 | 0.000123 | Hyperparameter tuning on all above models |
 
 
-### IC from Model Predictions vs. Actual CSI Index Return (Next Day)
 
-* **IF index**:
+### IC from Model Predictions vs. Actual CSI Index Return % (Next Day)
+
+* **Multiple models are tried**:
+  - VotingRegressor using the following models:
+    - LinearRegression
+    - KnnRegressor
+    - DecisionTreeRegressor
+    - SupportVectorRegressor
+    - TransformedTargetRegressor
+  - AdoBoost
+  - XgbBoost
+  - TensorFlow 
+
 
   * IC = **-0.238**, which is significantly better than raw ICs from futures data
   * Grid-searched model achieves similar IC
 
 * **Across 4 Futures Products**:
-
-
-Here is the formatted Markdown table based on the provided data:
+  Here is the test summary across multiple models and mutliple csi index future products.
+    - For some index future products, such as IC, the Information Coefficient% seem to be higher acoss models. 
+    - Please notem the **Information Coefficient% is 100 times of Information Coefficient**.
+    - Generally speaking, the RMSE is fairely consistent between models and across products with exception XgbBoost for IM.
+      - More turning for XgbBoost may be needed.
 
 ```markdown
 | Product | AI Model           | Information Coefficient (IC)% | RMSE      | Index ETF  | Index Name     |
@@ -116,25 +117,20 @@ Here is the formatted Markdown table based on the provided data:
 
 ## Study Conclusions
 
-* The **GridSearchCV model** achieved the lowest MSE, though the improvement over other models was minor (\~10%).
-* All MSE values were much lower than expected, likely due to the small variance in next-day index changes (typically between -0.01 and 0.01).
 * While large dealers show modest correlation with CSI returns, some smaller dealers (with intermittent data) showed higher correlations.
 
   * This suggests futures contracts may often be used for **hedging** rather than speculation.
-* The **VotingRegressor** model yielded a high absoute value of Information Coefficient (IC) for **IF** and **IM** futures:
-  * This could be leveraged to enhance ETF trading performance (e.g., 000300.SS and 512100.SS).
+* For CSI index future product "IC", multiple models yielded a high absoute value of Information Coefficient (IC):
+  * This could be leveraged to enhance ETF trading performance (e.g., 510500.SS ).
 
-* The **AdaBoostRegressor** model yielded a high absoute value of Information Coefficient (IC)  for **IC** future:
-  * This could be leveraged to enhance ETF trading performance (e.g., 510500.SS).
 *
 
 ## Future Work
 
-* **Add more models**, such as deep learning approaches (e.g., LSTM, Transformers).
 * **Backtesting** strategies based on model predictions:
-
   * Compare against a simple "buy and hold" strategy for CSI 300
   * Evaluate whether AI-based strategies provide better returns
+  
 * **Expand data sources**:
 
   * Identify top `n` individual stocks where futures data correlates highly with stock return the next day
