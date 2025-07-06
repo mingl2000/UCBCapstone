@@ -16,18 +16,24 @@ You can find the full Jupyter notebook for this study here:
 * **CSI 300 Index Historical Data**: From Yahoo Finance.
 
 ## Data Preprocessing
+* Index future data 
+  | Contract | Open   | High   | Low    | Volume | Amount       | OpenInterest | OpenInterestChange | Close  | SettlementPrice | LastSettlementPrice | Change1 | Change2 | Delta | datetime  |
+  |----------|--------|--------|--------|--------|--------------|--------------|--------------------|--------|-----------------|---------------------|---------|---------|-------|-----------|
+  | IC2001   | 5300.0 | 5392.4 | 5281.0 | 68331  | 7312402.380  | 75083.0      | 2008.0             | 5361.8 | 5368.8          | 5266.8              | 95.0    | 102.0   | --    | 20200102  |
+  | IC2002   | 5288.2 | 5373.6 | 5268.4 | 2172   | 231679.008   | 3898.0       | 592.0              | 5350.0 | 5359.2          | 5249.6              | 100.4   | 109.6   | --    | 20200102  |
+
 
 * Futures data from **January 4, 2021** onwards was collected.
 * **Top 50 dealers** were selected based on total trading volume over the entire period.
-* Each day's net long/short positions for these 50 dealers were organized into a single row. If a dealer has no data for a specific day, a value of 0 was used.
-* The futures data was merged with the CSI index daily return data to form a dataset like:
+  * Each day's net long/short positions for these 50 dealers were organized into a single row. If a dealer has no data for a specific day, a value of 0 was used.
+  * The futures data was merged with the CSI index daily return data to form a dataset like:
 
-```
-| Date       | Dealer1 | Dealer2 | Dealer3 | CSI return (next day) |
-|------------|---------|---------|---------|------------------------|
-| 2025-01-02 |  -100   |   80    |  -70    |         -0.01         |
-| 2025-01-03 |   200   |  -100   |   70    |         -0.02         |
-```
+  ```
+  | Date       | Dealer1 | Dealer2 | Dealer3 | CSI return (next day) |
+  |------------|---------|---------|---------|------------------------|
+  | 2025-01-02 |  -100   |   80    |  -70    |         -0.01         |
+  | 2025-01-03 |   200   |  -100   |   70    |         -0.02         |
+  ```
 
 ## Dealer Analysis
 
