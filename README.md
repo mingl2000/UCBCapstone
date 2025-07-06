@@ -139,18 +139,14 @@ The **Information Coefficient** between futures contract trading data and next-d
     - But for some products, like **IC**, information coefficient from LinearRegression is very impressive to be 0.27 or 27% reported above.
 
   * **Tensorflow** model:
-    - The mighty Tensorflow did not offer best RMSE nor information coefficient seems to be strange:
-      - The data may be linear by nature
-      - The Tensorflow model may be too complicated
+    - It seems to be strange that the mighty Tensorflow did not offer best RMSE nor information coefficient:
+      - The data may be linear by nature.
+      - The Tensorflow model may be too complicated.
       - Different Tensorflow model may be needed where Keras turning may help.
 
   * For index future product **IC**, the information coefficient is consistently high across most of models, except KnnRegressor and Tensorflow
     - This indicates that there is a strong correlation between the CSI index change next day and this future product trading info.
     - This product may offer best insight for CSI index trading. 
-    - The mighty Tensorflow did not offer best RMSE nor information coefficient seems to be strange:
-      - The data may be linear by nature
-      - The Tensorflow model may be too complicated
-      - Different Tensorflow model
 
   * **IH**,**IF** and **IM** futures show less predictive power for their corresponding ETF returns.
     - When Information Coefficient (IC) is **positive**, when prediction is **positive**, **positive** return next day is expected. 
