@@ -103,6 +103,53 @@ The **Information Coefficient** between futures contract trading data and next-d
 ```
 
 
+
+| Product | Model                     | IC%        | RMSE     | Index ETF | Index Name      |
+|---------|---------------------------|------------|----------|-----------|-----------------|
+| IH      | LinearRegression          | -6.956484  | 1.518327 | 510050.SS | CSI 50 Index    |
+| IH      | RidgeRegression           | -7.049813  | 1.510930 | 510050.SS | CSI 50 Index    |
+| IH      | KnnRegressor              | -2.127591  | 1.255726 | 510050.SS | CSI 50 Index    |
+| IH      | DecisionTreeRegressor     | 3.738916   | 1.626148 | 510050.SS | CSI 50 Index    |
+| IH      | SupportVectorRegressor    | -3.874771  | 1.203092 | 510050.SS | CSI 50 Index    |
+| IH      | TransformedTargetRegressor| -6.956484  | 1.518327 | 510050.SS | CSI 50 Index    |
+| IH      | VotingRegressor           | -4.786681  | 1.321331 | 510050.SS | CSI 50 Index    |
+| IH      | AdaBoostRegressor         | -0.596053  | 1.232800 | 510050.SS | CSI 50 Index    |
+| IH      | XgbBoost                  | -2.440734  | 1.235854 | 510050.SS | CSI 50 Index    |
+| IH      | Tensorflow                | -17.115662 | 1.505732 | 510050.SS | CSI 50 Index    |
+| IF      | LinearRegression          | -5.124202  | 1.521364 | 000300.SS | CSI 300 Index   |
+| IF      | RidgeRegression           | -4.766733  | 1.505695 | 000300.SS | CSI 300 Index   |
+| IF      | KnnRegressor              | -11.842341 | 1.209721 | 000300.SS | CSI 300 Index   |
+| IF      | DecisionTreeRegressor     | 8.196717   | 1.641102 | 000300.SS | CSI 300 Index   |
+| IF      | SupportVectorRegressor    | 0.814373   | 1.091704 | 000300.SS | CSI 300 Index   |
+| IF      | TransformedTargetRegressor| -5.124202  | 1.521364 | 000300.SS | CSI 300 Index   |
+| IF      | VotingRegressor           | -2.628456  | 1.245353 | 000300.SS | CSI 300 Index   |
+| IF      | AdaBoostRegressor         | -6.799853  | 1.137156 | 000300.SS | CSI 300 Index   |
+| IF      | XgbBoost                  | 5.392898   | 1.102974 | 000300.SS | CSI 300 Index   |
+| IF      | Tensorflow                | -0.154221  | 1.393530 | 000300.SS | CSI 300 Index   |
+| IC      | LinearRegression          | 27.318590  | 1.375402 | 510500.SS | CSI 500 Index   |
+| IC      | RidgeRegression           | 26.856829  | 1.356191 | 510500.SS | CSI 500 Index   |
+| IC      | KnnRegressor              | 1.723745   | 1.259227 | 510500.SS | CSI 500 Index   |
+| IC      | DecisionTreeRegressor     | 12.690832  | 1.442431 | 510500.SS | CSI 500 Index   |
+| IC      | SupportVectorRegressor    | 29.304191  | 1.122285 | 510500.SS | CSI 500 Index   |
+| IC      | TransformedTargetRegressor| 27.318590  | 1.375402 | 510500.SS | CSI 500 Index   |
+| IC      | VotingRegressor           | 28.317904  | 1.169722 | 510500.SS | CSI 500 Index   |
+| IC      | AdaBoostRegressor         | 20.265594  | 1.165397 | 510500.SS | CSI 500 Index   |
+| IC      | XgbBoost                  | 21.007844  | 1.156693 | 510500.SS | CSI 500 Index   |
+| IC      | Tensorflow                | 10.461168  | 1.310815 | 510500.SS | CSI 500 Index   |
+| IM      | LinearRegression          | 1.857966   | 7.008058 | 512100.SS | CSI 1000 Index  |
+| IM      | RidgeRegression           | 1.610533   | 6.229373 | 512100.SS | CSI 1000 Index  |
+| IM      | KnnRegressor              | 3.638734   | 7.429998 | 512100.SS | CSI 1000 Index  |
+| IM      | DecisionTreeRegressor     | 16.741148  | 2.079649 | 512100.SS | CSI 1000 Index  |
+| IM      | SupportVectorRegressor    | 4.500820   | 1.740467 | 512100.SS | CSI 1000 Index  |
+| IM      | TransformedTargetRegressor| 1.857966   | 7.008058 | 512100.SS | CSI 1000 Index  |
+| IM      | VotingRegressor           | 3.824080   | 4.124704 | 512100.SS | CSI 1000 Index  |
+| IM      | AdaBoostRegressor         | 10.868526  | 1.712199 | 512100.SS | CSI 1000 Index  |
+| IM      | XgbBoost                  | -2.729462  | 23.525207| 512100.SS | CSI 1000 Index  |
+| IM      | Tensorflow                | -5.702529  | 1.860019 | 512100.SS | CSI 1000 Index  |
+
+
+
+
 * **Insights**:
 
   * **IF** and **IM** futures show strong predictive power for their corresponding ETF returns.
@@ -130,7 +177,7 @@ The **Information Coefficient** between futures contract trading data and next-d
 * **Backtesting** strategies based on model predictions:
   * Compare against a simple "buy and hold" strategy for CSI 300
   * Evaluate whether AI-based strategies provide better returns
-  
+
 * **Expand data sources**:
 
   * Identify top `n` individual stocks where futures data correlates highly with stock return the next day
