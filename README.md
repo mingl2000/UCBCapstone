@@ -143,9 +143,9 @@ Backtesting was conducted using historical data to simulate trading strategies d
     ```
     # Complete test result:
     - Test result for Regression based models: 
-        ![Regression models backtrader test result](images/regression_backtrader_test_result.png)
+![Regression models backtrader test result](images/regression_backtrader_test_result.png)
     - Test result for Classification based models: 
-        ![Classification models backtrader test result](images/classification_backtrader_test_result.png)
+![Classification models backtrader test result](images/classification_backtrader_test_result.png)
 
 #### Next steps
     - More hyper-parameter searching, especially for tensorflow models
