@@ -125,21 +125,20 @@ Backtesting was conducted using historical data to simulate trading strategies d
     - Predictions from classification models seem to improve the trading outcome than buy and hold strategy. 
         - But the only 1 signal is triggered during 2 month test period. More study is needed.
         - These models did avoid a sharp market drop during the test period.
-    - If VotingRegressor model is used with investment capital evenly splited into all 4 CSI index ETFs, the overall annual return will be 23.25% which is much better than the buy hold strategy return 8.52%
-    - Modes with best annual returns
+    - Dramtic improvement comes from ETF related to future product IC which returns 33.55% vs 0.5% from buy and hold strategy
+    - If VotingRegressor model is used with investment capital evenly splited into all 4 CSI index ETFs, the overall annual return will be 23.25% which is much better than the buy hold strategy return 15.15%
     # Index ETF Performance Comparison using voting model only
-
     ```
-| Index Future Product | Index ETF   | Regression or Classification | Voting Model       | Annual Return from Prediction | Annual Return from Buy and Hold Strategy | Annual Return Improved by the Model |
-|----------------------|-------------|-----------------------------|--------------------|-------------------------------|------------------------------------------|-----------------------------------------|
-| IH                   | 510050.SS   | Regression                  | VotingRegressor    | 4.43%                         | 8.51%                                    | NO                                     |
-| IF                   | 000300.SS   | Regression                  | VotingRegressor    | 22.50%                        | 8.51%                                    | YES                                    |
-| IC                   | 510500.SS   | Regression                  | VotingRegressor    | 33.55%                        | 8.51%                                    | YES                                    |
-| IM                   | 512100.SS   | Regression                  | VotingRegressor    | 32.52%                        | 8.51%                                    | YES                                    |
-| IH                   | 510050.SS   | Classification              | VotingClassifier   | 7.42%                         | 8.51%                                    | NO                                     |
-| IF                   | 000300.SS   | Classification              | VotingClassifier   | 23.87%                        | 8.51%                                    | YES                                    |
-| IC                   | 510500.SS   | Classification              | VotingClassifier   | 0.99%                         | 8.51%                                    | No                                     |
-| IM                   | 512100.SS   | Classification              | VotingClassifier   | 34.13%                        | 8.51%                                    | YES                                    |
+| Index Future Product | Index ETF   | Regression or Classification | Voting Model       | Annual Return from Prediction | Annual Return from Buy and Hold Strategy | Annual Return Improved by the Model  |
+|----------------------|-------------|-----------------------------|--------------------|-------------------------------|------------------------------------------|---------------------------------------|
+| IH                   | 510050.SS   | Regression                  | VotingRegressor    | 4.43%                         | 8.51%                                    | NO                                    |
+| IF                   | 000300.SS   | Regression                  | VotingRegressor    | 22.50%                        | 24.50%                                   | NO                                    |
+| IC                   | 510500.SS   | Regression                  | VotingRegressor    | 33.55%                        | 0.50%                                    | YES                                   |
+| IM                   | 512100.SS   | Regression                  | VotingRegressor    | 32.52%                        | 27.11%                                   | YES                                   |
+| IH                   | 510050.SS   | Classification              | VotingClassifier   | 7.42%                         | 8.51%                                    | NO                                    |
+| IF                   | 000300.SS   | Classification              | VotingClassifier   | 23.87%                        | 24.50%                                   | YES                                   |
+| IC                   | 510500.SS   | Classification              | VotingClassifier   | 0.99%                         | 0.50%                                    | YES                                   |
+| IM                   | 512100.SS   | Classification              | VotingClassifier   | 34.13%                        | 24.50%                                   | YES                                   |
     ```
     # Complete test result:
     - Test result for Regression based models: 
