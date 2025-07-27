@@ -6,8 +6,19 @@
 * In the market studied in this report, both ETF and future contact can be traded for the same market index.
 * This report outlines the development and evaluation of predictive models for market index ETF trading using related index futures contract trading info history and market index data history. Multiple machine learning models were trained to identify trading opportunities, with backtests conducted to assess profitability and risk. Top models showed consistent performance and robustness. The report details methodology, results, and recommendations for implementation.
 
+#### Key finding
+* Here is the key finding from this study:
+    - High Information Coefficient (IC%) is observed between predicted return of index ETFs studied and real return of same ETF in unseen test dataset.  
+    - Dramtic trading outcome improvement comes from trading of ETF 510500.SS using related trading info of future product IC:
+        - Annual return from VotingRegressor prediction strategy  : **33.55%**
+        - Annual return from buy and hold strategy **0.5%**
+    - Trading with all 4 index ETFs basket with equal weight using VotingRegressor model:
+        - Annual return from VotingRegressor prediction strategy  : **23.25%**
+        - Annual return from buy and hold strategy **15.15%**
+
+
 #### Rationale
-* It's often said that futures traders are the "smart money." This study explores whether the public data of top 20 futures contract traders daily (across 7 columns, updated daily) can be leveraged to improve trading outcomes.
+* It's often said that futures traders are the "smart money." This study explores whether the public data of top 20 futures contract traders daily (across 7 categories, updated daily) can be leveraged to improve trading outcomes.
 * The assumption that futures traders possess superior market insights underpins the inclusion of futures data, which may reveal predictive signals not fully reflected in ETF price movements. By integrating these datasets, the models aim to exploit correlations and patterns between ETF and futures market dynamics, enhancing the accuracy of trading strategies. Backtesting these models against historical data ensures their robustness, providing a data-driven foundation for profitable and risk-managed ETF trading.
 
 
@@ -19,8 +30,16 @@
 
 
 #### Data Sources
-* **CSI 300 Index Futures**: From [CFFEX](http://www.cffex.com.cn), including daily top 20 traders by volume and other metrics.
-* **CSI 300 Index Historical Data**: From Yahoo Finance.
+* **CSI Index Futures**: From [CFFEX](http://www.cffex.com.cn), including daily top 20 traders by volume and other metrics.
+* **CSI Index Historical Data**: From Yahoo Finance.
+* **Index ETF and related future product studied**:
+    | Index Future Product | Index ETF   | Related market index         |
+    |----------------------|-------------|------------------------------|
+    | IH                   | 510050.SS   | CSI 50 index                 |
+    | IF                   | 000300.SS   | CSI 300 index                |
+    | IC                   | 510500.SS   | CSI 500 index                |
+    | IM                   | 512100.SS   | CSI 1000 index               |
+
 #### Source Data format
     * ** Index future contact top trader info **
         ```
@@ -50,16 +69,11 @@
     - This study developed predictive models for trading a market index ETF by integrating three primary datasets: 
         - Futures contract history data for the same market index 
         - Historical ETF history data for a market index. 
-        - Top 20 trading info in each category for the same market index:
-               * `volume`: End-of-day contract volume
-                * `volchange`: Daily change in contract volume
-                * `buyvol`: End-of-day buy contract volume
-                * `buyvolchange`: Daily change in buy contract volume
-                * `sellvol`: End-of-day sell contract volume
-                * `sellvolchange`: Daily change in sell contract volume
-                * `net_vol_diff`: `buyvolchange - sellvolchange`
+        - Trading info from top 20 traders in each category for the same market index
+
     - Trading info from Top 50 biggest traders by trading volume in history are used since their trading contributes **97.24%** of total future contact volume.
-    - Data preprocessing:
+
+    - **Data preprocessing**:
         - Future contact trading info for top 50 traders based on historic total trading volume are reprocessed into one record per day even though only top 20 are reported each day in each of the 7 categories listed above.
             - 0 is used if no data is reported for that trader in that category.
         - Technical indicators like MACD, RSI are alo calculated.
@@ -67,11 +81,13 @@
         - The percentage return of next day's close relatively to today's close is used target for training and evalution.
         - Here is a small subset of data columns:
             ```
-            | Date       | Dealer1 | Dealer2 | Dealer3 | CSI data today   | CSI return (next day) |
-            |------------|---------|---------|---------|------------------|-----------------------|
-            | 2025-01-02 |  -100   |   80    |  -70    |  500             |   -0.01               |
-            | 2025-01-03 |   200   |  -100   |   70    |  510             |   -0.02               |
+            | Date       | Dealer1      | Dealer2           | Dealer n          | Index ETF    | Index future today  | Technical indicators |  CSI return (next day)    |
+            |------------|--------------|-------------------|-------------------|--------------|---------------------|----------------------|---------------------------|
+            | 2025-01-02 | 7 columns    |     7 columns     |     7 columns     |  5 columns   | 12 columns          |     many columns     |   -0.01                   |
+            | 2025-01-03 | 7 columns    |     7 columns     |     7 columns     |  5 columns   | 12 columns          |     many columns     |   0.02                    |
             ```
+
+
 
     - ** Models studied**:
         - Regression models:
@@ -98,47 +114,60 @@
                 - Tensorflow RNN
                 - Tensorflow LTSM
 
-    - Model training:
-        - Test data setup: Data is split into 3 un-overlapped datasets to ensure no data polution and some models like Tensorflow RNN/LTSM requires un-overlapped data: 
-            - First 85% of data used for training
-            - Next 10% of data used for validation: This was intended to be used by tensorflow models.
-            - Last 5% of data used for testing
-        - Data reported for training and evalution:
+    - **Model training**:
+        - Test data setup: 
+            -Data is split into 3 un-overlapped datasets to ensure no data polution and some models like Tensorflow RNN/LTSM requires un-overlapped data: 
+                - First 85% of data used for training
+                - Next 10% of data used for validation: This was intended to be used by tensorflow models.
+                - Last 5% of data used for testing
+        - Data collected for training and evalution:
             - Information Coefficient (IC%) for regression models between model prediction real target using test dataset.
             - MSE for regression models between model prediction real target using test dataset.
             - Test accuracy for classification models
-    - Back test using backtrader framework with the following settings:
-        - Intial captial $100,000
-        - 0.1% commission
-        - Buy when model prediction >0 or True
-        - Sell when model prediction <0 or False
-        - Short trade is not allowed.
-        - Buy and hold stratey is used as reference for the perod in the test dataset.
+    - **Back trade test** 
+        - Backtrader setup:
+            - Intial captial $100,000
+            - 0.1% commission
+            - Buy all when model prediction >0 or True
+            - Sell all when model prediction <0 or False
+            - Short trade is not allowed.
+            - Buy and hold stratey is used as reference for the perod in the test dataset.
+            - Closing price is used for all trades.
 
+        - Data collected from Back trade tests:
+            - Annual return in percent
+            - Winning rate
+            - Number of trades
+            - Sharpe ation
+            - Max draw down
 
 Data preprocessing involved cleaning missing values, aligning timestamps between ETF and futures datasets, and engineering features such as price momentum, volatility, and ETF-futures price correlations. Multiple machine learning models, including regression, decision trees, and neural networks, were trained to predict ETF price movements and identify trading signals. Hyperparameter tuning was performed using cross-validation to optimize model performance.
 
 Backtesting was conducted using historical data to simulate trading strategies derived from model predictions. Performance metrics, including annualized returns, Sharpe ratio, maximum drawdown, and win rate, were calculated to evaluate strategy effectiveness. Robustness was tested across different market conditions to ensure reliability. The methodology aimed to validate the hypothesis that combining ETF and futures data could yield profitable, risk-adjusted trading strategies.
 
 #### Results
-    - Predictions from Regression models seem to improve the trading outcome than buy and hold strategy, especially for index ETF relaetd to future contact IC
+    - High Information Coefficient (IC%) is observed between predicted return of index ETFs studied and real return of same ETF in unseen test dataset.
+        - This provides the basis for futher study the trade improvement by these model predictions.
+    - Predictions from Regression models see trading outcome improvement overall  than buy and hold strategy.
     - Predictions from classification models seem to improve the trading outcome than buy and hold strategy. 
-        - But the only 1 signal is triggered during 2 month test period. More study is needed.
+        - But the only 1 signal is triggered during 2 month test period. 
+            - Question remains if this is accidental or indicates a trustworthy outcome.
+            - More study is needed.
         - These models did avoid a sharp market drop during the test period.
     - Dramtic improvement comes from ETF related to future product IC which returns 33.55% vs 0.5% from buy and hold strategy
     - If VotingRegressor model is used with investment capital evenly splited into all 4 CSI index ETFs, the overall annual return will be 23.25% which is much better than the buy hold strategy return 15.15%
-    # Index ETF Performance Comparison using voting model only
+    # Index ETF Performance Comparison using voting model only:
     ```
-| Index Future Product | Index ETF   | Regression or Classification | Voting Model       | Annual Return from Prediction | Annual Return from Buy and Hold Strategy | Annual Return Improved by the Model  |
-|----------------------|-------------|-----------------------------|--------------------|-------------------------------|------------------------------------------|---------------------------------------|
-| IH                   | 510050.SS   | Regression                  | VotingRegressor    | 4.43%                         | 8.51%                                    | NO                                    |
-| IF                   | 000300.SS   | Regression                  | VotingRegressor    | 22.50%                        | 24.50%                                   | NO                                    |
-| IC                   | 510500.SS   | Regression                  | VotingRegressor    | 33.55%                        | 0.50%                                    | YES                                   |
-| IM                   | 512100.SS   | Regression                  | VotingRegressor    | 32.52%                        | 27.11%                                   | YES                                   |
-| IH                   | 510050.SS   | Classification              | VotingClassifier   | 7.42%                         | 8.51%                                    | NO                                    |
-| IF                   | 000300.SS   | Classification              | VotingClassifier   | 23.87%                        | 24.50%                                   | YES                                   |
-| IC                   | 510500.SS   | Classification              | VotingClassifier   | 0.99%                         | 0.50%                                    | YES                                   |
-| IM                   | 512100.SS   | Classification              | VotingClassifier   | 34.13%                        | 24.50%                                   | YES                                   |
+    | Index Future Product | Index ETF   | Regression or Classification | Voting Model       | Annual Return from Prediction | Annual Return from Buy and Hold Strategy | Annual Return Improved by the Model  |
+    |----------------------|-------------|-----------------------------|--------------------|-------------------------------|------------------------------------------|---------------------------------------|
+    | IH                   | 510050.SS   | Regression                  | VotingRegressor    | 4.43%                         | 8.51%                                    | NO                                    |
+    | IF                   | 000300.SS   | Regression                  | VotingRegressor    | 22.50%                        | 24.50%                                   | NO                                    |
+    | IC                   | 510500.SS   | Regression                  | VotingRegressor    | 33.55%                        | 0.50%                                    | YES                                   |
+    | IM                   | 512100.SS   | Regression                  | VotingRegressor    | 32.52%                        | 27.11%                                   | YES                                   |
+    | IH                   | 510050.SS   | Classification              | VotingClassifier   | 7.42%                         | 8.51%                                    | NO                                    |
+    | IF                   | 000300.SS   | Classification              | VotingClassifier   | 23.87%                        | 24.50%                                   | YES                                   |
+    | IC                   | 510500.SS   | Classification              | VotingClassifier   | 0.99%                         | 0.50%                                    | YES                                   |
+    | IM                   | 512100.SS   | Classification              | VotingClassifier   | 34.13%                        | 24.50%                                   | YES                                   |
     ```
     # Complete test result:
     - Test result for Regression based models: 
@@ -191,3 +220,9 @@ Backtesting was conducted using historical data to simulate trading strategies d
                 Tensorflow_MLP_training.png
 
 ##### Contact and Further Information
+Ming Lu
+
+Email: ml124@cornell.edu 
+
+[LinkedIn](https://www.linkedin.com/in/ming-lu-4187376)
+
