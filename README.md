@@ -8,7 +8,7 @@
 ## Jupyter Notebook
 
 You can find the full Jupyter notebook for this study here:
-👉 [data\_explore3.ipynb](https://github.com/mingl2000/UCBCapstone/blob/main/data_explore3.ipynb)
+👉 [data\_explore3.ipynb](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone.ipynb)
 
 ## Data Sources
 
@@ -71,18 +71,22 @@ The **Information Coefficient** between futures contract trading data and next-d
   - DecisionTreeRegressor
   - SupportVectorRegressor
   - TransformedTargetRegressor
+  - AdoBoost
+  - XgbBoost
   - VotingRegressor using the following models:
     - LinearRegression
     - KnnRegressor
     - DecisionTreeRegressor
-    - SupportVectorRegressor
     - TransformedTargetRegressor
-  - AdoBoost
-  - XgbBoost
-  - TensorFlow 
+    - AdoBoost
+    - XgbBoost
+  - TensorFlow
+    - Tensorflow MLP
+    - Tensorflow RNN
+    - Tensorflow LTSM
 
 
-  * IC = **-0.238**, which is significantly better than raw ICs from futures data
+  * IC%  from  VotingRegressor is consitently higher than most of models for all future products studied.
   * Grid-searched model achieves similar IC
 
 * **Test result**:
@@ -91,58 +95,86 @@ The **Information Coefficient** between futures contract trading data and next-d
     - Please notem the **Information Coefficient% is 100 times of Information Coefficient**.
     - Generally speaking, the RMSE is fairely consistent between models and across products with exception XgbBoost for IM.
       - More turning for XgbBoost may be needed.
+    - Surprising, test resul from Tensorflow models (MLP, RNN, LTSM) is not as good as non-tensorflow models.
+    - While VotingRegressor returns high IC% for future product IH/IF, but this did lead to higher winner rate nor annual return.
+    - Predicted data from SupportVectorRegressor model is constance for some future products. This is excluded for this backtrade test in this report.
+
+* **Backtrader Test setup**:
+  - The dataset prepared for each product is split into 3 datasets by date:
+    - First 85% of data used for training
+    - Next 10% of data used for validation
+    - Last 5% of data used for testing
+  - This dataset split ensures same datasets are used by all models.
+    - Tensorflow RNN/LTSM requires data for slide time window. Randomized split data leads to data pollution. 
+
+* **Backtrader Test Summary**:
+  - Information Coefficient% is very high many models for future product IH/IF
+  - Winning rate for those back tests with high Information Coefficient% is high as well
+  - The annualized return is lower than risk free interest rate. This may be due to the total number trades triggered is low and return of each trades is low as well due to the nature of index.
+  - Please see the following chart for details:
+  ![Backtrader Test summary](images/backtrader_test_result.png)
+
+* ** Feature engineering**
+  - MACD, RSI, MA stock indicators are added to the input data
+  - Test shows that RSI indicator is listed as top 10 important features for some models. 
+
+# Backtrader Test Result:
+  Here is the back trader tests from the UCBCapstone.ipynb notebook:
+
+| Index | Prodct Type | Model                     |  Information Coefficient% | MSE | Annual Return% | win rate% | total trades | Sharpe Ratio | Max Drawdown |Index ETF | Index Name      |
+|-------|------------|----------------------------|-------------|--------------|------------|-----------|-----------|-----------|-----------|-----------|-----------------|
+| 0     | IH         | LinearRegression           | 59.137167   | 4.425738e-05 | 0.197144   | 36.363636 |  11       | 0.033510  | 1.226869  | 510050.SS | CSI 50 Index    |
+| 1     | IH         | RidgeRegression            | 33.335994   | 1.405721e-04 | 0.360843   | 50.000000 |   2       | 0.096074  | 0.883643  | 510050.SS | CSI 50 Index    |
+| 2     | IH         | KnnRegressor               | -1.963562   | 9.371028e-05 | 0.748552   | 62.500000 |  16       | 0.095910  | 3.468588  | 510050.SS | CSI 50 Index    |
+| 3     | IH         | DecisionTreeRegressor      | 32.675226   | 8.701422e-05 | 0.464293   | 68.750000 |  16       | 0.044037  | 5.168186  | 510050.SS | CSI 50 Index    |
+| 4     | IH         | TransformedTargetRegressor | 59.137167   | 4.425715e-05 | 0.197144   | 36.363636 |  11       | 0.033510  | 1.226869  | 510050.SS | CSI 50 Index    |
+| 5     | IH         | AdaBoostRegressor          | 17.694659   | 6.535469e-05 | 0.226666   | 57.142857 |   7       | 0.026012  | 2.731649  | 510050.SS | CSI 50 Index    |
+| 6     | IH         | XGBRegressor               | 24.121004   | 6.213977e-05 | 0.589273   | 66.666667 |   9       | 0.093805  | 2.313842  | 510050.SS | CSI 50 Index    |
+| 7     | IH         | VotingRegressor            | 57.081853   | 5.310142e-05 | 0.273751   | 44.444444 |   9       | 0.059235  | 1.285824  | 510050.SS | CSI 50 Index    |
+| 8     | IH         | Tensorflow_LTSM            | 15.495255   | 9.825646e-01 | 0.394444   | 45.454545 |  11       | 0.078956  | 1.227821  | 510050.SS | CSI 50 Index    |
+| 9     | IH         | Tensorflow_RNN             | -20.479094  | 1.305353e+17 | 0.251014   | 53.333333 |  15       | 0.029246  | 2.466315  | 510050.SS | CSI 50 Index    |
+| 10    | IH         | Tensorflow_MLP             | -3.859447   | 9.996649e-01 | 0.224131   | 66.666667 |  15       | 0.028746  | 2.935605  | 510050.SS | CSI 50 Index    |
+| 11    | IF         | LinearRegression           | 49.693598   | 4.343613e-03 | 0.753148   | 75.000000 |   4       | 0.150751  | 2.384734  | 000300.SS | CSI 300 Index   |
+| 12    | IF         | RidgeRegression            | 30.358007   | 1.910503e-03 | 0.855003   | 50.000000 |   2       | 0.164998  | 2.552258  | 000300.SS | CSI 300 Index   |
+| 13    | IF         | KnnRegressor               | 19.724497   | 2.886102e-05 | 0.311076   | 50.000000 |  10       | 0.062223  | 2.321840  | 000300.SS | CSI 300 Index   |
+| 14    | IF         | DecisionTreeRegressor      | 18.047211   | 1.021990e-04 | 0.867911   | 70.000000 |  10       | 0.206255  | 1.606757  | 000300.SS | CSI 300 Index   |
+| 15    | IF         | TransformedTargetRegressor | 49.693598   | 4.343613e-03 | 0.753148   | 75.000000 |   4       | 0.150751  | 2.384734  | 000300.SS | CSI 300 Index   |
+| 16    | IF         | AdaBoostRegressor          | 16.406959   | 2.962083e-05 | 0.667080   | 71.428571 |   7       | 0.140703  | 2.492903  | 000300.SS | CSI 300 Index   |
+| 17    | IF         | XGBRegressor               | 21.222383   | 3.766896e-05 | 0.277141   | 53.333333 |  15       | 0.084420  | 2.191233  | 000300.SS | CSI 300 Index   |
+| 18    | IF         | VotingRegressor            | 48.113208   | 6.090753e-04 | 0.924789   | 66.666667 |   3       | 0.179109  | 2.542569  | 000300.SS | CSI 300 Index   |
+| 19    | IF         | Tensorflow_LTSM            | -8.420187   | 9.615476e-01 | -0.159094  | 0.000000  |   3       | -0.254451 | 0.871513  | 000300.SS | CSI 300 Index   |
+| 20    | IF         | Tensorflow_RNN             | 19.867347   | 2.716819e+17 | 0.000000   | 0.000000  |   0       | 0.000000  | 0.000000  | 000300.SS | CSI 300 Index   |
+| 21    | IF         | Tensorflow_MLP             | 0.000000    | 9.981915e-01 | 0.829341   | 0.000000  |   0       | 0.159451  | 2.555831  | 000300.SS | CSI 300 Index   |
+| 22    | IC         | LinearRegression           | 21.653763   | 1.672055e-02 | 1.547383   | 50.000000 |   4       | 0.190986  | 2.384553  | 510500.SS | CSI 500 Index   |
+| 23    | IC         | RidgeRegression            | 20.057467   | 1.708738e-02 | 1.334198   | 25.000000 |   4       | 0.160575  | 2.384433  | 510500.SS | CSI 500 Index   |
+| 24    | IC         | KnnRegressor               | 33.520256   | 7.845432e-04 | 0.260774   | 40.000000 |   5       | 0.019087  | 6.664658  | 510500.SS | CSI 500 Index   |
+| 25    | IC         | DecisionTreeRegressor      | -12.448830  | 6.423623e-03 | 0.667194   | 53.333333 |  15       | 0.107556  | 2.201611  | 510500.SS | CSI 500 Index   |
+| 26    | IC         | TransformedTargetRegressor | 21.653763   | 1.672057e-02 | 1.547383   | 50.000000 |   4       | 0.190986  | 2.384553  | 510500.SS | CSI 500 Index   |
+| 27    | IC         | AdaBoostRegressor          | -4.583853   | 1.999040e-04 | 1.150653   | 80.000000 |  10       | 0.193698  | 1.427381  | 510500.SS | CSI 500 Index   |
+| 28    | IC         | XGBRegressor               | 10.798946   | 1.293296e-03 | 1.242938   | 46.153846 |  13       | 0.165989  | 3.747380  | 510500.SS | CSI 500 Index   |
+| 29    | IC         | VotingRegressor            | 8.791603    | 4.739916e-03 | 1.547383   | 50.000000 |   4       | 0.190986  | 2.384553  | 510500.SS | CSI 500 Index   |
+| 30    | IC         | Tensorflow_LTSM            | -0.698408   | 1.000007e+00 | -0.055332  | 0.000000  |   1       | -0.256312 | 0.388213  | 510500.SS | CSI 500 Index   |
+| 31    | IC         | Tensorflow_RNN             | 4.233871    | 5.744177e+15 | -1.632252  | 52.941176 |  17       | -0.116445 | 10.678757 | 510500.SS | CSI 500 Index   |
+| 32    | IC         | Tensorflow_MLP             | -0.402552   | 9.991668e-01 | -0.089513  | 58.333333 |  12       | -0.025759 | 3.890411  | 510500.SS | CSI 500 Index   |
+| 33    | IM         | LinearRegression           | -5.098039   | 1.326792e-01 | 1.086045   | 0.000000  |   0       | 0.102405  | 3.075232  | 512100.SS | CSI 1000 Index  |
+| 34    | IM         | RidgeRegression            | 1.932773    | 5.585410e-02 | 1.086045   | 0.000000  |   0       | 0.102405  | 3.075232  | 512100.SS | CSI 1000 Index  |
+| 35    | IM         | KnnRegressor               | -7.198880   | 1.292775e-04 | -0.059585  | 60.000000 |   5       | -0.058728 | 0.893274  | 512100.SS | CSI 1000 Index  |
+| 36    | IM         | DecisionTreeRegressor      | 27.227502   | 3.635647e-04 | 0.701394   | 55.555556 |   9       | 0.093503  | 3.039058  | 512100.SS | CSI 1000 Index  |
+| 37    | IM         | TransformedTargetRegressor | -5.182073   | 1.321083e-01 | 1.086045   | 0.000000  |   0       | 0.102405  | 3.075232  | 512100.SS | CSI 1000 Index  |
+| 38    | IM         | AdaBoostRegressor          | 20.704191   | 8.577275e-05 | 1.557022   | 50.000000 |   6       | 0.166713  | 3.331721  | 512100.SS | CSI 1000 Index  |
+| 39    | IM         | XGBRegressor               | 35.406162   | 1.132003e-04 | 0.316588   | 62.500000 |   8       | 0.038290  | 3.039029  | 512100.SS | CSI 1000 Index  |
+| 40    | IM         | VotingRegressor            | -1.792717   | 1.857259e-02 | 1.086045   | 0.000000  |   0       | 0.102405  | 3.075232  | 512100.SS | CSI 1000 Index  |
+| 41    | IM         | Tensorflow_LTSM            | 4.516129    | 3.976535e-04 | 0.617827   | 66.666667 |   3       | 0.079340  | 2.822961  | 512100.SS | CSI 1000 Index  |
+| 42    | IM         | Tensorflow_RNN             | 4.919355    | 1.144205e-01 | 1.053215   | 14.285714 |   7       | 0.140898  | 2.895634  | 512100.SS | CSI 1000 Index  |
+| 43    | IM         | Tensorflow_MLP             | 9.580503    | 6.510453e-03 | 1.098851   | 71.428571 |   7       | 0.209346  | 1.542261  | 512100.SS | CSI 1000 Index  |
 
 
 
-| Product | Model                     | Information Coefficient%        | RMSE     | Index ETF | Index Name      |
-|---------|---------------------------|------------|----------|-----------|-----------------|
-| IH      | LinearRegression          | -6.956484  | 1.518327 | 510050.SS | CSI 50 Index    |
-| IH      | RidgeRegression           | -7.049813  | 1.510930 | 510050.SS | CSI 50 Index    |
-| IH      | KnnRegressor              | -2.127591  | 1.255726 | 510050.SS | CSI 50 Index    |
-| IH      | DecisionTreeRegressor     | 3.738916   | 1.626148 | 510050.SS | CSI 50 Index    |
-| IH      | SupportVectorRegressor    | -3.874771  | 1.203092 | 510050.SS | CSI 50 Index    |
-| IH      | TransformedTargetRegressor| -6.956484  | 1.518327 | 510050.SS | CSI 50 Index    |
-| IH      | VotingRegressor           | -4.786681  | 1.321331 | 510050.SS | CSI 50 Index    |
-| IH      | AdaBoostRegressor         | -0.596053  | 1.232800 | 510050.SS | CSI 50 Index    |
-| IH      | XgbBoost                  | -2.440734  | 1.235854 | 510050.SS | CSI 50 Index    |
-| IH      | Tensorflow                | -17.115662 | 1.505732 | 510050.SS | CSI 50 Index    |
-| IF      | LinearRegression          | -5.124202  | 1.521364 | 000300.SS | CSI 300 Index   |
-| IF      | RidgeRegression           | -4.766733  | 1.505695 | 000300.SS | CSI 300 Index   |
-| IF      | KnnRegressor              | -11.842341 | 1.209721 | 000300.SS | CSI 300 Index   |
-| IF      | DecisionTreeRegressor     | 8.196717   | 1.641102 | 000300.SS | CSI 300 Index   |
-| IF      | SupportVectorRegressor    | 0.814373   | 1.091704 | 000300.SS | CSI 300 Index   |
-| IF      | TransformedTargetRegressor| -5.124202  | 1.521364 | 000300.SS | CSI 300 Index   |
-| IF      | VotingRegressor           | -2.628456  | 1.245353 | 000300.SS | CSI 300 Index   |
-| IF      | AdaBoostRegressor         | -6.799853  | 1.137156 | 000300.SS | CSI 300 Index   |
-| IF      | XgbBoost                  | 5.392898   | 1.102974 | 000300.SS | CSI 300 Index   |
-| IF      | Tensorflow                | -0.154221  | 1.393530 | 000300.SS | CSI 300 Index   |
-| IC      | LinearRegression          | 27.318590  | 1.375402 | 510500.SS | CSI 500 Index   |
-| IC      | RidgeRegression           | 26.856829  | 1.356191 | 510500.SS | CSI 500 Index   |
-| IC      | KnnRegressor              | 1.723745   | 1.259227 | 510500.SS | CSI 500 Index   |
-| IC      | DecisionTreeRegressor     | 12.690832  | 1.442431 | 510500.SS | CSI 500 Index   |
-| IC      | SupportVectorRegressor    | 29.304191  | 1.122285 | 510500.SS | CSI 500 Index   |
-| IC      | TransformedTargetRegressor| 27.318590  | 1.375402 | 510500.SS | CSI 500 Index   |
-| IC      | VotingRegressor           | 28.317904  | 1.169722 | 510500.SS | CSI 500 Index   |
-| IC      | AdaBoostRegressor         | 20.265594  | 1.165397 | 510500.SS | CSI 500 Index   |
-| IC      | XgbBoost                  | 21.007844  | 1.156693 | 510500.SS | CSI 500 Index   |
-| IC      | Tensorflow                | 10.461168  | 1.310815 | 510500.SS | CSI 500 Index   |
-| IM      | LinearRegression          | 1.857966   | 7.008058 | 512100.SS | CSI 1000 Index  |
-| IM      | RidgeRegression           | 1.610533   | 6.229373 | 512100.SS | CSI 1000 Index  |
-| IM      | KnnRegressor              | 3.638734   | 7.429998 | 512100.SS | CSI 1000 Index  |
-| IM      | DecisionTreeRegressor     | 16.741148  | 2.079649 | 512100.SS | CSI 1000 Index  |
-| IM      | SupportVectorRegressor    | 4.500820   | 1.740467 | 512100.SS | CSI 1000 Index  |
-| IM      | TransformedTargetRegressor| 1.857966   | 7.008058 | 512100.SS | CSI 1000 Index  |
-| IM      | VotingRegressor           | 3.824080   | 4.124704 | 512100.SS | CSI 1000 Index  |
-| IM      | AdaBoostRegressor         | 10.868526  | 1.712199 | 512100.SS | CSI 1000 Index  |
-| IM      | XgbBoost                  | -2.729462  | 23.525207| 512100.SS | CSI 1000 Index  |
-| IM      | Tensorflow                | -5.702529  | 1.860019 | 512100.SS | CSI 1000 Index  |
 
 
-
-
-* **Insights**:
+* **Insights from backtrade test result**:
   * **LinearRegression** does not offer best RMSE in general across all products.
-    - But for some products, like **IC**, information coefficient from LinearRegression is very impressive to be 0.27 or 27% reported above.
+    - But for some products, like **IH/IF**, information coefficient from LinearRegression is very impressive to be more than 0.49 or 49% reported above.
 
   * **Tensorflow** model:
     - It seems to be strange that the mighty Tensorflow did not offer best RMSE nor information coefficient:
@@ -164,23 +196,19 @@ The **Information Coefficient** between futures contract trading data and next-d
 
 ## Study Conclusions
 
-* While large dealers show modest correlation with CSI returns, some smaller dealers (with intermittent data) showed higher correlations.
+* While high Information Coefficient% and high winner rate in back trade testing for IH/IF future product, but the annual return is lower than expected.
+  * This may be due to the following:
+    - The market is generally calm or downward in the testing period
+    - The stock exchange only offers long trades.
+    - Big gap in time between training data and test data. The market in testing period may have changes not visible during the traing period 
+    - The number of trades triggered is low due to the combination of the 3 above. 
+* Due to higher winner rate than 50% for future product IH and IF studied, the prediction from models studied such as VotingRegressor may be used to time the market when trading securities in the market sector crosponding to the market indexes
 
-  * This suggests futures contracts may often be used for **hedging** rather than speculation.
-* For CSI index future product "IC", multiple models yielded a high absoute value of Information Coefficient (IC):
-  * This could be leveraged to enhance ETF trading performance (e.g., 510500.SS ).
 
 *
 
 ## Future Work
+  - Use the important features found from LinearRegression for train and test
 
-* **Backtesting** strategies based on model predictions:
-  * Compare against a simple "buy and hold" strategy for CSI 300
-  * Evaluate whether AI-based strategies provide better returns
-
-* **Expand data sources**:
-
-  * Identify top `n` individual stocks where futures data correlates highly with stock return the next day
-  * Investigate whether this selective strategy outperforms direct index-based trading
 
 
