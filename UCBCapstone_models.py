@@ -334,7 +334,7 @@ def load_and_preprocess_and_split_data(product, features=[], classification=Fals
 
 def train_predict_all_models(product, important_features=[], classification=False, epochs=200):
     
-    df_result =pd.DataFrame(columns=["product",'model_name','IC%','rmse','prediction%','start_date','last_date','model','history','feature_names'])
+    df_result =pd.DataFrame(columns=["product",'model_name','IC%','rmse','test_score','prediction%','start_date','last_date','model','history','feature_names'])
     print(f'Train, test and predict on CSI future contract:"{product} classification={classification}"...')
     X_train, y_train, X_val, y_val, X_test, y_test,df_close, start_date,last_date =load_and_preprocess_and_split_data(product,important_features,classification)
 
