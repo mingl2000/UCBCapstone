@@ -1,6 +1,6 @@
-### Project Title
+### Trading index ETFs by predictions from related index future contract trading info 
 
-**Author**
+**Ming Lu**
 
 #### Executive summary
 * In the market studied in this report, both ETF and future contact can be traded for the same market index.
@@ -21,13 +21,13 @@
 #### Data Sources
 * **CSI 300 Index Futures**: From [CFFEX](http://www.cffex.com.cn), including daily top 20 traders by volume and other metrics.
 * **CSI 300 Index Historical Data**: From Yahoo Finance.
-#### Data format
+#### Source Data format
     * ** Index future contact top trader info **
         ```
-        | Index Contact | trader    |   volume | volchange      | buyvol    | buyvolchange  | sellvol       | sellvolchange | net_vol_diff  | datetime   |
-        |---------------|-----------|----------|----------------|-----------|---------------|---------------|---------------|---------------|------------|
-        | IC2001        | dealer1   |   5300.0 | 5392.4         | 5281.0    | 68331         | 7312402.380   | 75083.0       | 2008.0        |  20200102  |
-        | IC2002        | delaer2   |   5288.2 | 5373.6         | 5268.4    | 2172          | 231679.008    | 3898.0        | 592.0         |  20200102  |
+        | Index Contact | trader    |   volume  | volchange   | buyvol  | buyvolchange  | sellvol   | sellvolchange| net_vol_diff   | datetime   |
+        |---------------|-----------|-----------|-------------|---------|---------------|-----------|--------------|----------------|------------|
+        | IC2001        | dealer1   |  15300    | 5392        | 5281    | 68331         | 100       | 75083        | 2008           |  20200102  |
+        | IC2002        | delaer2   |  15288    | 5373        | 5268    | 2172          | 200       | 3898          | 592           |  20200102  |
         ```
 
     * ** Index future contact data **
@@ -45,6 +45,7 @@
         | IC2001   | 5300.0 | 5392.4 | 5281.0 | 68331  | 7312402.380  | 20200102  |
         | IC2002   | 5288.2 | 5373.6 | 5268.4 | 2172   | 231679.008   | 20200102  |
         ```
+
 #### Methodology
     - This study developed predictive models for trading a market index ETF by integrating three primary datasets: 
         - Futures contract history data for the same market index 
@@ -72,7 +73,7 @@
             | 2025-01-03 |   200   |  -100   |   70    |  510             |   -0.02               |
             ```
 
-    - Models studied:
+    - ** Models studied**:
         - Regression models:
             - LinearRegression
             - RidgeRegression
@@ -81,8 +82,8 @@
             - TransformedTargetRegressor
             - AdaBoostRegressor
             - XGBRegressor
-            - VotingRegressor
-            - TensorFlow: Model training and evaluation only, no back trade test reported
+            - VotingRegressor:  using all regression models above
+            - TensorFlow: Model training and evaluation only
                 - Tensorflow MLP
                 - Tensorflow RNN
                 - Tensorflow LTSM
@@ -91,8 +92,8 @@
             - KNeighborsClassifier
             - AdaBoostClassifier
             - XGBClassifier
-            - VotingClassifier
-            - TensorFlow: Model training and evaluation only, no back trade test reported
+            - VotingClassifier: using all classfication models above
+            - TensorFlow: Model training and evaluation only.
                 - Tensorflow MLP
                 - Tensorflow RNN
                 - Tensorflow LTSM
@@ -118,12 +119,38 @@
 Data preprocessing involved cleaning missing values, aligning timestamps between ETF and futures datasets, and engineering features such as price momentum, volatility, and ETF-futures price correlations. Multiple machine learning models, including regression, decision trees, and neural networks, were trained to predict ETF price movements and identify trading signals. Hyperparameter tuning was performed using cross-validation to optimize model performance.
 
 Backtesting was conducted using historical data to simulate trading strategies derived from model predictions. Performance metrics, including annualized returns, Sharpe ratio, maximum drawdown, and win rate, were calculated to evaluate strategy effectiveness. Robustness was tested across different market conditions to ensure reliability. The methodology aimed to validate the hypothesis that combining ETF and futures data could yield profitable, risk-adjusted trading strategies.
+
 #### Results
-What did your research find?
-![Regression models backtrader test result](images/regression_backtrader_test_result.png)
-![Classification models backtrader test result](images/classification_backtrader_test_result.png)
+    - Predictions from Regression models seem to improve the trading outcome than buy and hold strategy, especially for index ETF relaetd to future contact IC
+    - Predictions from classification models seem to improve the trading outcome than buy and hold strategy. 
+        - But the only 1 signal is triggered during 2 month test period. More study is needed.
+        - These models did avoid a sharp market drop during the test period.
+    - If VotingRegressor model is used with investment capital evenly splited into all 4 CSI index ETFs, the overall annual return will be 23.25% which is much better than the buy hold strategy return 8.52%
+    - Modes with best annual returns
+    # Index ETF Performance Comparison using voting model only
+
+    ```
+| Index Future Product | Index ETF   | Regression or Classification | Voting Model       | Annual Return from Prediction | Annual Return from Buy and Hold Strategy | Annual Return Improved by the Model |
+|----------------------|-------------|-----------------------------|--------------------|-------------------------------|------------------------------------------|-----------------------------------------|
+| IH                   | 510050.SS   | Regression                  | VotingRegressor    | 4.43%                         | 8.51%                                    | NO                                     |
+| IF                   | 000300.SS   | Regression                  | VotingRegressor    | 22.50%                        | 8.51%                                    | YES                                    |
+| IC                   | 510500.SS   | Regression                  | VotingRegressor    | 33.55%                        | 8.51%                                    | YES                                    |
+| IM                   | 512100.SS   | Regression                  | VotingRegressor    | 32.52%                        | 8.51%                                    | YES                                    |
+| IH                   | 510050.SS   | Classification              | VotingClassifier   | 7.42%                         | 8.51%                                    | NO                                     |
+| IF                   | 000300.SS   | Classification              | VotingClassifier   | 23.87%                        | 8.51%                                    | YES                                    |
+| IC                   | 510500.SS   | Classification              | VotingClassifier   | 0.99%                         | 8.51%                                    | No                                     |
+| IM                   | 512100.SS   | Classification              | VotingClassifier   | 34.13%                        | 8.51%                                    | YES                                    |
+    ```
+    # Complete test result:
+    - Test result for Regression based models: 
+        ![Regression models backtrader test result](images/regression_backtrader_test_result.png)
+    - Test result for Classification based models: 
+        ![Classification models backtrader test result](images/classification_backtrader_test_result.png)
 
 #### Next steps
+    - More hyper-parameter searching, especially for tensorflow models
+    - Back trade strategy tuning to reduce risk and improve stability
+
     - Pending issues:
         - Many efforts have been made to use Tensorflow based models, such as MLP, RNN, LTSM.
             - High Information Coefficient (IC%) between what these models predictions and test values in test set
@@ -135,10 +162,33 @@ What did your research find?
     
     
 #### Outline of project
+    - [Data explore](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_data_explorer.ipynb)
+    - [Model train and test](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_models.ipynb)
+    - [Back trade testing](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_backtest.ipynb)
 
-- [Data explore](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_data_explorer.ipynb)
-- [Model train and test](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_models.ipynb)
-- [Back testing](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone_backtest.ipynb)
 
-[data\_explore3.ipynb](https://github.com/mingl2000/UCBCapstone/blob/main/UCBCapstone.ipynb)
+#### project structure
+    \---UCBCapstone
+        |   app_settings.py                     * Applicaiton sttings for random seeds and plt
+        |   README.md
+        |   UCBCapstone_backtest.ipynb          
+        |   UCBCapstone_backtest.py             * Code referenced by UCBCapstone_backtest.ipynb
+        |   UCBCapstone_data_explorer.ipynb
+        |   UCBCapstone_data_io.py              * Data input/output  
+        |   UCBCapstone_data_prepare.py         * Data preprocessing phase 2
+        |   UCBCapstone_data_view.py            * Data presentation: functions used by many plots in ipynb files
+        |   UCBCapstone_models.ipynb            * 
+        |   UCBCapstone_models.py               * Code referenced by UCBCapstone_models.ipynb.
+        |   UCBCapstone_models_search.py        * Hyper-parameter search using GrdiSearchCV
+        |
+        +---data                                * All the data referenced by code above.
+        | *.csv
+        +---data_prepare
+        |       future_preprocessing2.py        * Aata preprocessing from the data directly downloaded from cffex
+        \---images                              * Images referenenced by this README.md
+                backtrader_test_result.png
+                classification_backtrader_test_result.png
+                regression_backtrader_test_result.png
+                Tensorflow_MLP_training.png
+
 ##### Contact and Further Information
