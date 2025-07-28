@@ -96,7 +96,8 @@ Can predictive models, trained on historical ETF data, futures contract data, an
       | VotingRegressor   |                         | weights                                       | [1, 1, 2, 1, 1, 1, 1, 1]  | 
 
 - GridSearchCV result for VotingClassifier:
-      | GridSearchCV estimator|  Model used by estimator  |  Parameter  name  used by   GridSearchCV    | Parameter value found by GridSearchCV | 
+```
+      | GridSearchCV estimator|Model used by estimator|  Parameter  name  used by   GridSearchCV  | Parameter value found by GridSearchCV | 
       |--------------------|--------------------------|-----------------------------------------------|-------------------|
       | VotingClassifier   | LinearRegression         | LogisticRegression__lg__fit_intercept         | True              | 
       | VotingClassifier   | KnnRegressor             | KNeighborsClassifier__knn__n_neighbors        | 7                 | 
@@ -107,7 +108,7 @@ Can predictive models, trained on historical ETF data, futures contract data, an
       | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__learning_rate             | 0.01              | 
       | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__n_estimators              | 100               | 
       | VotingClassifier   |                          | weights                                       | [1, 1, 2, 1, 1]   | 
-
+```
 ### Backtesting
 - **Setup**:
   - Initial capital: $100,000.
