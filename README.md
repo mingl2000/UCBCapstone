@@ -77,6 +77,34 @@ Can predictive models, trained on historical ETF data, futures contract data, an
   - Classification: Test accuracy.
 - **Hyperparameter Tuning**: Conducted using cross-validation to optimize model performance.
 
+  - GridSearchCV result for VotingRegressor:
+      | GridSearchCV estimator|  Model used by estimator  |Parameter  name  used by   GridSearchCV| Parameter value found by GridSearchCV      | 
+      |-------------------|-------------------------|-----------------------------------------------|-------------|
+      | VotingRegressor   | LinearRegression        | LinearRegression__lr__fit_intercept           | False       | 
+      | VotingRegressor   | RidgeRegression         | RidgeRegression__ridge__alpha                 | 10          | 
+      | VotingRegressor   | KnnRegressor            | KnnRegressor__knn__n_neighbors                | 9           | 
+      | VotingRegressor   | KnnRegressor            | KnnRegressor__knn__weights                    | 'distance'  |
+      | VotingRegressor   | DecisionTreeRegressor   | DecisionTreeRegressor__dt__max_depth          | 5           | 
+      | VotingRegressor   | DecisionTreeRegressor   | DecisionTreeRegressor__dt__min_samples_split  | 2           | 
+      | VotingRegressor   | AdaBoostRegressor       | AdaBoostRegressor__ada__n_estimators          | 50          |           
+      | VotingRegressor   | AdaBoostRegressor       | AdaBoostRegressor__ada__learning_rate         | 0.1         | 
+      | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__max_depth                  | 3           |
+      | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__learning_rate              | 0.01        | 
+      | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__n_estimators               | 100         | 
+
+- GridSearchCV result for VotingClassifier:
+      | GridSearchCV estimator|  Model used by estimator  |  Parameter  name  used by   GridSearchCV    | Parameter value found by GridSearchCV | 
+      |--------------------|--------------------------|-----------------------------------------------|-------------------|
+      | VotingClassifier   | LinearRegression         | LogisticRegression__lg__fit_intercept         | True              | 
+      | VotingClassifier   | KnnRegressor             | KNeighborsClassifier__knn__n_neighbors        | 7                 | 
+      | VotingClassifier   | KnnRegressor             | KNeighborsClassifier__knn__weights            | 'uniform'         | 
+      | VotingClassifier   | AdaBoostClassifier       | AdaBoostClassifier__ada__learning_rate        | 0.1               |
+      | VotingClassifier   | AdaBoostClassifier       | AdaBoostClassifier__ada__n_estimators         | 100               | 
+      | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__max_depth                 | 3                 |
+      | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__learning_rate             | 0.01              | 
+      | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__n_estimators              | 100               | 
+      | VotingClassifier   |                          | weights                                       | [1, 1, 2, 1, 1]   | 
+
 ### Backtesting
 - **Setup**:
   - Initial capital: $100,000.
