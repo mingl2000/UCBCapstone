@@ -99,9 +99,9 @@ Can predictive models, trained on historical ETF data, futures contract data, an
 ```
       | GridSearchCV estimator|Model used by estimator|  Parameter  name  used by   GridSearchCV  | Parameter value found by GridSearchCV | 
       |--------------------|--------------------------|-----------------------------------------------|-------------------|
-      | VotingClassifier   | LinearRegression         | LogisticRegression__lg__fit_intercept         | True              | 
-      | VotingClassifier   | KnnRegressor             | KNeighborsClassifier__knn__n_neighbors        | 7                 | 
-      | VotingClassifier   | KnnRegressor             | KNeighborsClassifier__knn__weights            | 'uniform'         | 
+      | VotingClassifier   | LogisticRegression       | LogisticRegression__lg__fit_intercept         | True              | 
+      | VotingClassifier   | KNeighborsClassifier     | KNeighborsClassifier__knn__n_neighbors        | 7                 | 
+      | VotingClassifier   | KNeighborsClassifier     | KNeighborsClassifier__knn__weights            | 'uniform'         | 
       | VotingClassifier   | AdaBoostClassifier       | AdaBoostClassifier__ada__learning_rate        | 0.1               |
       | VotingClassifier   | AdaBoostClassifier       | AdaBoostClassifier__ada__n_estimators         | 100               | 
       | VotingClassifier   | XGBClassifier            | XGBClassifier__xgb__max_depth                 | 3                 |
