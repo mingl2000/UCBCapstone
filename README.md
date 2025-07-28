@@ -72,9 +72,11 @@ Can predictive models, trained on historical ETF data, futures contract data, an
   - Training: First 85% of data.
   - Validation: Next 10% (used primarily for TensorFlow models).
   - Testing: Last 5% (unseen data).
+
 - **Evaluation Metrics**:
   - Regression: Information Coefficient (IC%), Mean Squared Error (MSE).
   - Classification: Test accuracy.
+  
 - **Hyperparameter Tuning**: Conducted using cross-validation to optimize model performance.
 
   - GridSearchCV result for VotingRegressor:
@@ -91,6 +93,7 @@ Can predictive models, trained on historical ETF data, futures contract data, an
       | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__max_depth                  | 3           |
       | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__learning_rate              | 0.01        | 
       | VotingRegressor   | XGBRegressor            | XGBRegressor__xgb__n_estimators               | 100         | 
+      | VotingRegressor   |                         | weights                                       | [1, 1, 2, 1, 1, 1, 1, 1]  | 
 
 - GridSearchCV result for VotingClassifier:
       | GridSearchCV estimator|  Model used by estimator  |  Parameter  name  used by   GridSearchCV    | Parameter value found by GridSearchCV | 
@@ -112,6 +115,7 @@ Can predictive models, trained on historical ETF data, futures contract data, an
   - Trading rules: Buy all when prediction > 0 (regression) or True (classification); sell all when prediction < 0 or False. No shorting allowed.
   - Benchmark: Buy-and-hold strategy over the test period.
   - Trades executed at closing prices.
+
 - **Metrics Collected**:
   - Annualized return, winning rate, number of trades, Sharpe ratio, maximum drawdown.
 
