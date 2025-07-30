@@ -199,9 +199,9 @@ def train_and_IC_TensorFlow_MLP(X_train, y_train, X_val, y_val, X_test, y_test, 
     model = tf.keras.Sequential([
         normalization_layer,
         tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(256, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dropout(0.2,seed=42),
+       tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dropout(0.2,seed=42),
         tf.keras.layers.Dense(32, activation='relu'),
     ])
     learning_rate=0.0001

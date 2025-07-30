@@ -14,7 +14,10 @@ def set_random_seed():
     random.seed(42)
     np.random.seed(42)
     tf.random.set_seed(42)
+    tf.keras.utils.set_random_seed(42)
     tf.config.experimental.enable_op_determinism()
+    tf.config.threading.set_inter_op_parallelism_threads(1)
+    
 
 
 def set_global_settings():
