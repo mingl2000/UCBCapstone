@@ -179,6 +179,8 @@ def load_and_preprocess_data(product):
 
 
 from scipy.stats import pearsonr
+
+
 class EarlyStoppingByValLoss(tf.keras.callbacks.Callback):
     def __init__(self, threshold):
         super(EarlyStoppingByValLoss, self).__init__()
@@ -219,7 +221,15 @@ def train_and_IC_TensorFlow_MLP(X_train, y_train, X_val, y_val, X_test, y_test, 
 
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate), loss=loss, metrics=metrics)
 
-    history= model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, verbose=0, callbacks=[EarlyStoppingByValLoss(threshold=1)])
+    reduced_lr_callback=tf.keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss',  # Metric to monitor
+        factor=0.1,          # Factor by which the learning rate will be reduced
+        patience=5,          # Number of epochs with no improvement after which LR will be reduced
+        verbose=1,           # 0: quiet, 1: update messages
+        min_lr=0.00001       # Minimum learning rate
+    )
+
+    history= model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, verbose=0, callbacks=[EarlyStoppingByValLoss(threshold=0.03),reduced_lr_callback])
     
     if classification:
         test_loss, test_score = model.evaluate(X_test, y_test, verbose=0)
@@ -280,9 +290,9 @@ def train_and_IC_TensorFlow_RNN_LTSM(model_name, model, X_train, y_train, X_val,
 
 def train_and_IC_TensorFlow_RNN(X_train, y_train, X_val, y_val, X_test, y_test, classification, timesteps, epochs=200):
     model = tf.keras.Sequential([
-        tf.keras.layers.SimpleRNN(1024, activation='relu', return_sequences=True),
+        tf.keras.layers.SimpleRNN(96, activation='relu', return_sequences=True),
         tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.SimpleRNN(256, activation='relu', return_sequences=True),
+        tf.keras.layers.SimpleRNN(64, activation='relu', return_sequences=True),
         tf.keras.layers.Dropout(0.2),
         tf.keras.layers.SimpleRNN(32, activation='relu'),
     ])
@@ -406,7 +416,7 @@ if __name__ == "__main__":
     product='IF'
     #train_predict_all_models(product, important_features=[], classification=False)
     classification=False
-    df_train_test_result= train_predict_all_models(product, important_features=[], classification=classification, epochs=500)
+    df_train_test_result= train_predict_all_models(product, important_features=[], classification=classification, epochs=2000)
     for model_name in ['Tensorflow_MLP']:
         #model=get_model(df_train_test_result, model_name)
         #model.values[0].summary()
