@@ -36,20 +36,6 @@ def grid_search_voting_regressor(X_train, y_train):
         estimators=[(name, model) for name, model in regression_models.items()]
     )
     param_grid = {
-        'LogisticRegression__lg__fit_intercept': [True, False],
-        'KNeighborsClassifier__knn__n_neighbors': [3, 5, 7],
-        'KNeighborsClassifier__knn__weights': ['uniform', 'distance'],
-        'DecisionTreeRegressor__dt__max_depth': [None, 5, 10],
-        'DecisionTreeRegressor__dt__min_samples_split': [2, 5],
-        #'SupportVectorRegressor__svr__C': [0.1, 1.0, 10.0],
-        #'SupportVectorRegressor__svr__kernel': ['rbf', 'linear'],
-        #'SupportVectorRegressor__svr__epsilon': [0.1, 0.2],
-        #'TransformedTargetRegressor__regressor__fit_intercept': [True, False],
-        #'TransformedTargetRegressor__transformer': [StandardScaler(), PowerTransformer(method='yeo-johnson'), None],
-        #'AdaBoostClassifier_ada_
-        #'weights': [[1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 2, 1, 1, 1], [1, 1, 2, 1, 1], [1, 1, 1, 2, 1], [1, 1, 1, 1, 2]]
-    }
-    param_grid = {
     'LinearRegression__lr__fit_intercept': [True, False],
     'RidgeRegression__ridge__alpha': [0.1, 1.0, 10.0],  #Best parameters: {'RidgeRegression__ridge__alpha': 10.0}
     
