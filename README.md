@@ -7,6 +7,9 @@ This report investigates the development and evaluation of predictive models for
 
 ## Key Findings
 - **High Predictive Accuracy**: A strong Information Coefficient (IC%) was observed between predicted and actual ETF returns in the unseen test dataset, validating the models' predictive power.
+- **Seasonal effect on daily returns**
+  - Daily returns in Novemeber is more bias to be postive, especially 2% or more.
+  - Daily returns in Januany is more bias to be negtive, especially -2% or less.
 - **Important features**:  These features will be the focus of model training and test.
   - Future trading data from some of the top traders have much higher importance in many models trained.
   - Stock indicator RSI seems to have high importance for many modles trained.
